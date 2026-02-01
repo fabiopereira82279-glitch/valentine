@@ -1,182 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Valentine 💘</title>
+  <meta charset="UTF-8">
+  <title>Will You Be My Valentine? 💖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    height: 100vh;
-    overflow: hidden;
-  }
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-  /* FULL BACKGROUND 💘 */
-  body::before {
-    content: "💘 💘 💘 💘 💘 💘 💘 💘 💘 💘 💘 💘 💘 💘 💘 💘 💘 💘 💘 💘";
-    position: fixed;
-    inset: 0;
-    font-size: 32px;
-    line-height: 1.8;
-    opacity: 0.22;
-    white-space: pre-wrap;
-    animation: floatBg 15s linear infinite;
-  }
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      background: linear-gradient(135deg, #ff4d6d, #ff758f, #ff8fa3);
+    }
 
-  @keyframes floatBg {
-    from { transform: translateY(0); }
-    to { transform: translateY(-120px); }
-  }
+    /* Emoji background */
+    body::before {
+      content: "💘 💖 💘 💖 💘 💖 💘 💖 💘 💖 💘 💖 💘 💖 💘 💖 💘 💖 💘 💖";
+      position: absolute;
+      inset: 0;
+      font-size: 2.2rem;
+      opacity: 0.18;
+      display: flex;
+      flex-wrap: wrap;
+      align-content: center;
+      justify-content: center;
+      pointer-events: none;
+    }
 
-  .container {
-    position: relative;
-    z-index: 2;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    .card {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(12px);
+      padding: 40px 30px;
+      border-radius: 24px;
+      text-align: center;
+      z-index: 1;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
 
-  .card {
-    background: white;
-    padding: 35px;
-    border-radius: 24px;
-    text-align: center;
-    width: 350px;
-    box-shadow: 0 25px 45px rgba(255,105,180,0.4);
-  }
+    h1 {
+      color: #fff;
+      margin-bottom: 30px;
+      font-size: 2rem;
+    }
 
-  h2 {
-    margin: 15px 0 25px;
-  }
+    .buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      position: relative;
+    }
 
-  .buttons {
-    position: relative;
-    height: 90px;
-  }
+    button {
+      font-size: 1.1rem;
+      padding: 14px 26px;
+      border: none;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: transform 0.25s ease, background 0.25s ease;
+    }
 
-  button {
-    padding: 12px 28px;
-    border: none;
-    border-radius: 25px;
-    font-size: 16px;
-    cursor: pointer;
-    position: absolute;
-  }
+    #yes {
+      background: #ff2e63;
+      color: white;
+      box-shadow: 0 10px 20px rgba(255, 46, 99, 0.4);
+    }
 
-  #yes {
-    background: hotpink;
-    color: white;
-    left: 70px;
-    box-shadow: 0 6px 18px rgba(255,105,180,0.5);
-    transition: transform 0.2s ease;
-  }
+    #yes:hover {
+      transform: scale(1.1);
+    }
 
-  #yes:hover {
-    transform: scale(1.15);
-  }
+    #no {
+      background: #fff;
+      color: #ff2e63;
+      position: relative;
+    }
 
-  #no {
-    background: #eee;
-    color: #555;
-    left: 180px;
-  }
+    /* Confetti hearts */
+    .heart {
+      position: fixed;
+      top: -20px;
+      font-size: 22px;
+      animation: fall linear forwards;
+      pointer-events: none;
+    }
 
-  .shy {
-    margin-top: 20px;
-    font-size: 14px;
-    color: #999;
-  }
-
-  canvas {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 3;
-  }
-</style>
+    @keyframes fall {
+      to {
+        transform: translateY(120vh);
+        opacity: 0;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<canvas id="confetti"></canvas>
-
-<div class="container">
   <div class="card">
-    <div style="font-size:48px;">🐱💗</div>
-    <h2>Will you be my Valentine?</h2>
+    <h1>Will you be my Valentine? 💖</h1>
 
-    <div class="buttons" id="btnArea">
-      <button id="yes">Yes</button>
-      <button id="no">No</button>
+    <div class="buttons">
+      <button id="yes">Yes 💕</button>
+      <button id="no">No 🙈</button>
     </div>
-
-    <div class="shy">“No” seems a bit too shy 🙈</div>
   </div>
-</div>
 
-<script>
-  /* NO BUTTON RUNS AWAY */
-  const noBtn = document.getElementById("no");
-  const area = document.getElementById("btnArea");
+  <script>
+    const noBtn = document.getElementById("no");
+    const yesBtn = document.getElementById("yes");
 
-  noBtn.addEventListener("mouseover", () => {
-    const maxX = area.clientWidth - noBtn.clientWidth;
-    const maxY = area.clientHeight - noBtn.clientHeight;
+    // Shy NO button
+    noBtn.addEventListener("mouseenter", () => {
+      const x = Math.random() * 160 - 80;
+      const y = Math.random() * 120 - 60;
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    });
 
-    noBtn.style.left = Math.random() * maxX + "px";
-    noBtn.style.top  = Math.random() * maxY + "px";
-  });
+    // YES click
+    yesBtn.addEventListener("click", () => {
+      launchConfetti();
 
-  /* EXTRA STRONG HEART CONFETTI 💖 */
-  const canvas = document.getElementById("confetti");
-  const ctx = canvas.getContext("2d");
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
+      // WhatsApp message
+      const phone = "917083719480"; // your number with country code
+      const msg = encodeURIComponent("She said YES 💖 The date is confirmed!");
+      window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
+    });
 
-  function heartConfetti() {
-    let hearts = [];
-    for (let i = 0; i < 220; i++) {
-      hearts.push({
-        x: Math.random() * canvas.width,
-        y: -20,
-        size: Math.random() * 22 + 14,
-        speed: Math.random() * 5 + 3,
-        drift: Math.random() * 3 - 1.5
-      });
+    function launchConfetti() {
+      for (let i = 0; i < 80; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerText = "💖";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 7000);
+      }
     }
-
-    function draw() {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      hearts.forEach(h => {
-        ctx.font = h.size + "px serif";
-        ctx.fillText("💖", h.x, h.y);
-        h.y += h.speed;
-        h.x += h.drift;
-      });
-    }
-
-    const anim = setInterval(draw, 16);
-    setTimeout(() => clearInterval(anim), 5000);
-  }
-
-  /* YES → CONFETTI + WHATSAPP */
-  document.getElementById("yes").onclick = () => {
-    heartConfetti();
-
-    const message = encodeURIComponent(
-      "She clicked YES 💕\nDate confirmed 😌"
-    );
-
-    setTimeout(() => {
-      window.open(
-        "https://wa.me/917083719480?text=" + message,
-        "_blank"
-      );
-    }, 700);
-  };
-</script>
+  </script>
 
 </body>
 </html>
+
