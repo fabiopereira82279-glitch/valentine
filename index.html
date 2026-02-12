@@ -21,13 +21,12 @@
       background: linear-gradient(135deg, #ff4d6d, #ff758f, #ff8fa3);
     }
 
-    /* Emoji background */
     body::before {
-      content: "💘 💖 💘 💖 💘 💖 💘 💖 💘 💖 💘 💖 💘 💖 💘 💖 💘 💖 💘 💖";
+      content: "💘 💖 💘 💖 💘 💖 💘 💖 💘 💖 💘 💖 💘 💖";
       position: absolute;
       inset: 0;
       font-size: 2.2rem;
-      opacity: 0.18;
+      opacity: 0.2;
       display: flex;
       flex-wrap: wrap;
       align-content: center;
@@ -37,44 +36,50 @@
 
     .card {
       background: rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(12px);
-      padding: 40px 30px;
-      border-radius: 24px;
+      backdrop-filter: blur(14px);
+      padding: 45px 35px;
+      border-radius: 26px;
       text-align: center;
       z-index: 1;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.25);
     }
 
     h1 {
       color: #fff;
       margin-bottom: 30px;
-      font-size: 2rem;
+      font-size: 2.1rem;
     }
 
     .buttons {
       display: flex;
-      gap: 20px;
+      gap: 24px;
       justify-content: center;
-      position: relative;
     }
 
     button {
       font-size: 1.1rem;
-      padding: 14px 26px;
+      padding: 14px 28px;
       border: none;
       border-radius: 40px;
       cursor: pointer;
-      transition: transform 0.25s ease, background 0.25s ease;
+      transition: transform 0.25s ease;
     }
 
     #yes {
       background: #ff2e63;
       color: white;
-      box-shadow: 0 10px 20px rgba(255, 46, 99, 0.4);
+      box-shadow: 0 0 25px rgba(255,46,99,0.8);
+      animation: pulse 1.5s infinite;
     }
 
     #yes:hover {
-      transform: scale(1.1);
+      transform: scale(1.12);
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 20px rgba(255,46,99,0.6); }
+      50% { box-shadow: 0 0 35px rgba(255,46,99,1); }
+      100% { box-shadow: 0 0 20px rgba(255,46,99,0.6); }
     }
 
     #no {
@@ -83,20 +88,26 @@
       position: relative;
     }
 
-    /* Confetti hearts */
     .heart {
       position: fixed;
-      top: -20px;
-      font-size: 22px;
+      top: -30px;
+      font-size: 24px;
       animation: fall linear forwards;
       pointer-events: none;
     }
 
     @keyframes fall {
       to {
-        transform: translateY(120vh);
+        transform: translateY(130vh) rotate(360deg);
         opacity: 0;
       }
+    }
+
+    .message {
+      color: white;
+      font-size: 1.3rem;
+      margin-top: 20px;
+      display: none;
     }
   </style>
 </head>
@@ -104,49 +115,70 @@
 <body>
 
   <div class="card">
-    <h1>Will you be my Valentine? 💖</h1>
+    <h1 id="title">Will you be my Valentine? 💖</h1>
 
-    <div class="buttons">
+    <div class="buttons" id="btns">
       <button id="yes">Yes 💕</button>
       <button id="no">No 🙈</button>
+    </div>
+
+    <div class="message" id="msg">
+      Yayyy! 💘 Opening WhatsApp in 5 seconds…
     </div>
   </div>
 
   <script>
     const noBtn = document.getElementById("no");
     const yesBtn = document.getElementById("yes");
+    const msg = document.getElementById("msg");
+    const title = document.getElementById("title");
+    const btns = document.getElementById("btns");
 
-    // Shy NO button
-    noBtn.addEventListener("mouseenter", () => {
-      const x = Math.random() * 160 - 80;
-      const y = Math.random() * 120 - 60;
+    let clicked = false;
+
+    function moveNo() {
+      const x = Math.random() * 200 - 100;
+      const y = Math.random() * 150 - 75;
       noBtn.style.transform = `translate(${x}px, ${y}px)`;
-    });
+    }
 
-    // YES click
+    noBtn.addEventListener("mouseenter", moveNo);
+    noBtn.addEventListener("touchstart", moveNo);
+
     yesBtn.addEventListener("click", () => {
+      if (clicked) return;
+      clicked = true;
+
+      btns.style.display = "none";
+      title.innerText = "She said YES 💖";
+      msg.style.display = "block";
+
       launchConfetti();
 
-      // WhatsApp message
-      const phone = "917083719480"; // your number with country code
-      const msg = encodeURIComponent("She said YES 💖 The date is confirmed!");
-      window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
+      const phone = "7424518822";
+      const text = encodeURIComponent("I was thinking about Valentine’s Day and realized… you’re the only plan I want💖");
+
+      setTimeout(() => {
+        window.open(`https://wa.me/${phone}?text=${text}`, "_blank");
+      }, 5000);
     });
 
     function launchConfetti() {
-      for (let i = 0; i < 80; i++) {
+      for (let i = 0; i < 160; i++) {
         const heart = document.createElement("div");
         heart.className = "heart";
-        heart.innerText = "💖";
+        heart.innerText = ["💖","💘","💕"][Math.floor(Math.random()*3)];
         heart.style.left = Math.random() * 100 + "vw";
-        heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
+        heart.style.animationDuration = (Math.random() * 3 + 4) + "s";
+        heart.style.fontSize = (Math.random() * 10 + 18) + "px";
         document.body.appendChild(heart);
 
-        setTimeout(() => heart.remove(), 7000);
+        setTimeout(() => heart.remove(), 9000);
       }
     }
   </script>
 
 </body>
 </html>
+
 
